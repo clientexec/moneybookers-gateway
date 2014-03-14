@@ -6,6 +6,7 @@ require_once 'modules/admin/models/GatewayPlugin.php';
 */
 class PluginMoneybookers extends GatewayPlugin
 {
+
     function getVariables()
     {
         /* Specification
