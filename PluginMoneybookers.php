@@ -31,6 +31,11 @@ class PluginMoneybookers extends GatewayPlugin
                                         "description"   =>lang("Secret word set in your Money Bookers account."),
                                         "value"         =>""
                                        ),
+                   lang("Status E-mail") => array (
+                                        "type"          =>"text",
+                                        "description"   =>lang("E-mail address to where you want Moneybookers to send a copy of the transaction details after the payment process is complete. (Optional)"),
+                                        "value"         =>""
+                                       ),
                    lang("Visa") => array (
                                         "type"          =>"yesno",
                                         "description"   =>lang("Select YES to allow Visa card acceptance with this plugin.  No will prevent this card type."),
@@ -97,6 +102,7 @@ class PluginMoneybookers extends GatewayPlugin
         //Function needs to build the url to the payment processor, then redirect
         //Plugin variables can be accesses via $params["plugin_[pluginname]_[variable]"] (ex. $params["plugin_paypal_UserID"])
         $stat_url = mb_substr($params['clientExecURL'],-1,1) == "//" ? $params['clientExecURL']."plugins/gateways/moneybookers/callback.php" : $params['clientExecURL']."/plugins/gateways/moneybookers/callback.php";
+        $stat_url2 = $params["plugin_moneybookers_Status E-mail"];
 
         $strForm  = '<html><body>';
         $strForm .= '<form name="frmMoneyBookers" action="https://www.moneybookers.com/app/payment.pl" method="post">';
@@ -106,6 +112,9 @@ class PluginMoneybookers extends GatewayPlugin
         $strForm .= '<input type="hidden" name="amount" value="'.sprintf("%01.2f", round($params["invoiceTotal"], 2)).'">';
         $strForm .= '<input type="hidden" name="transaction_id" value="'.$params['invoiceNumber'].'">';
         $strForm .= '<input type="hidden" name="status_url" value="'.$stat_url.'">';
+        if(trim($stat_url2) != ''){
+            $strForm .= '<input type="hidden" name="status_url2" value="'.$stat_url2.'">';
+        }
         $strForm .= '<input type="hidden" name="return_url" value="'.$params["clientExecURL"].'">';
         $strForm .= '<input type="hidden" name="cancel_url" value="'.$params["clientExecURL"].'">';
         $strForm .= '<input type="hidden" name="language" value="EN">';
