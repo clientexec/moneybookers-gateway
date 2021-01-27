@@ -58,7 +58,7 @@ class PluginMoneybookers extends GatewayPlugin
                                        ),
                    lang("Invoice After Signup") => array (
                                         "type"          =>"yesno",
-                                        "description"   =>lang("Select YES if you want an invoice sent to the customer after signup is complete."),
+                                        "description"   =>lang("Select YES if you want an invoice sent to the client after signup is complete."),
                                         "value"         =>"1"
                                        ),
                    lang("Signup Name") => array (
@@ -68,7 +68,7 @@ class PluginMoneybookers extends GatewayPlugin
                                        ),
                    lang("Dummy Plugin") => array (
                                         "type"          =>"hidden",
-                                        "description"   =>lang("1 = Only used to specify a billing type for a customer. 0 = full fledged plugin requiring complete functions"),
+                                        "description"   =>lang("1 = Only used to specify a billing type for a client. 0 = full fledged plugin requiring complete functions"),
                                         "value"         =>"0"
                                        ),
                    lang("Accept CC Number") => array (
@@ -81,11 +81,6 @@ class PluginMoneybookers extends GatewayPlugin
                                         "description"   =>lang("No description"),
                                         "value"         =>"0"
                                        ),
-                   lang("30 Day Billing") => array (
-                                        "type"          =>"hidden",
-                                        "description"   =>lang("Select YES if you want ClientExec to treat monthly billing by 30 day intervals.  If you select NO then the same day will be used to determine intervals."),
-                                        "value"         =>"0"
-                                       ),
                    lang("Check CVV2") => array (
                                         "type"          =>"hidden",
                                         "description"   =>lang("Select YES if you want to accept CVV2 for this plugin."),
@@ -96,12 +91,14 @@ class PluginMoneybookers extends GatewayPlugin
     }
 
     function credit($params)
-    {}
+    {
+    }
 
-    function singlepayment($params) {
+    function singlepayment($params)
+    {
         //Function needs to build the url to the payment processor, then redirect
         //Plugin variables can be accesses via $params["plugin_[pluginname]_[variable]"] (ex. $params["plugin_paypal_UserID"])
-        $stat_url = mb_substr($params['clientExecURL'],-1,1) == "//" ? $params['clientExecURL']."plugins/gateways/moneybookers/callback.php" : $params['clientExecURL']."/plugins/gateways/moneybookers/callback.php";
+        $stat_url = mb_substr($params['clientExecURL'], -1, 1) == "//" ? $params['clientExecURL']."plugins/gateways/moneybookers/callback.php" : $params['clientExecURL']."/plugins/gateways/moneybookers/callback.php";
         $stat_url2 = $params["plugin_moneybookers_Status E-mail"];
 
         $strForm  = '<html><body>';
@@ -112,7 +109,7 @@ class PluginMoneybookers extends GatewayPlugin
         $strForm .= '<input type="hidden" name="amount" value="'.sprintf("%01.2f", round($params["invoiceTotal"], 2)).'">';
         $strForm .= '<input type="hidden" name="transaction_id" value="'.$params['invoiceNumber'].'">';
         $strForm .= '<input type="hidden" name="status_url" value="'.$stat_url.'">';
-        if(trim($stat_url2) != ''){
+        if (trim($stat_url2) != '') {
             $strForm .= '<input type="hidden" name="status_url2" value="'.$stat_url2.'">';
         }
         $strForm .= '<input type="hidden" name="return_url" value="'.$params["clientExecURL"].'">';
@@ -134,4 +131,3 @@ class PluginMoneybookers extends GatewayPlugin
         exit;
     }
 }
-?>
